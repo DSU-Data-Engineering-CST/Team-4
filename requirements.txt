@@ -1,4 +1,8 @@
-pandas
-matplotlib
-openpyxl
-requests
+# requirements.txt 
+# To install all dependencies, run:
+# pip install -r requirements.txt
+
+pandas           # For data manipulation
+matplotlib       # For plotting graphs
+openpyxl         # For writing Excel files
+requests         # For fetching data from Binance API
