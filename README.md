@@ -58,20 +58,6 @@ pip install pandas matplotlib openpyxl requests
 - Stores it in `top_10_crypto_data.xlsx` on your Desktop
 - Generates plots per coin
 - Saves dashboards in `TopCryptoDashboards` folder
-
----
-
-## 💾 Output Structure
-
-```
-📁 Desktop/
-├── top_10_crypto_data.xlsx         ← Excel with full price history
-└── TopCryptoDashboards/            ← Dashboard images per coin
-    ├── BTC_dashboard.png
-    ├── ETH_dashboard.png
-    ├── ...
-```
-
 ---
 
 ## 📝 Notes
@@ -110,7 +96,4 @@ pip install pandas matplotlib openpyxl requests
 - 📓 OpenPyXL
 
 ---
-
-## 📬 Author
-
 Built with ❤️ using Binance API, Pandas, Matplotlib, and Excel.
