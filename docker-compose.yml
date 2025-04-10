@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql_crypto
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootsrushti8
+      MYSQL_DATABASE: crypto_data
+      MYSQL_USER: root
+      MYSQL_PASSWORD: rootsrushti8
+    ports:
+      - "3306:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+
+  crypto-etl:
+    build: .
+    container_name: crypto_etl
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: rootsrushti8
+      DB_NAME: crypto_data
+      DB_CHARSET: utf8mb4
+    command: ["python", "main.py"]
+
+volumes:
+  dbdata:
+
+
+
+
