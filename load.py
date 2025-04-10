@@ -1,28 +1,58 @@
 # load.py
-# Loads the cleaned cryptocurrency Excel data for further use (e.g., plotting, analysis)
 
-import pandas as pd
-import os
+import pymysql
+from config import DB_CONFIG
 
-def get_excel_path():
-    # Set the path to the Excel file on Desktop
-    desktop = os.path.join(os.path.expanduser("~"), "Desktop")
-    return os.path.join(desktop, "top_10_crypto_data.xlsx")
+# --------------------------------------
+# Save DataFrame to MySQL
+# --------------------------------------
+def save_to_mysql(df, symbol, connection=None):
+    close_connection = False
 
-def load_crypto_data():
-    excel_file = get_excel_path()
-    
-    if not os.path.exists(excel_file):
-        raise FileNotFoundError(f"❌ Excel file not found at {excel_file}. Please run `extract.py` first.")
+    # Create a new connection if not passed
+    if connection is None:
+        connection = pymysql.connect(**DB_CONFIG)
+        close_connection = True
 
-    print(f"📥 Loading Excel data from: {excel_file}")
-    
-    # Load all sheets as a dictionary of DataFrames
-    xl = pd.ExcelFile(excel_file)
-    data = {sheet: xl.parse(sheet) for sheet in xl.sheet_names}
+    cursor = connection.cursor()
+    table_name = symbol.lower().replace('usdt', '') + '_data'
 
-    print(f"✅ Loaded {len(data)} sheets: {', '.join(data.keys())}")
-    return data
+    # Create table if it doesn't exist
+    create_query = f"""
+    CREATE TABLE IF NOT EXISTS {table_name} (
+        date DATETIME PRIMARY KEY,
+        open FLOAT,
+        high FLOAT,
+        low FLOAT,
+        close FLOAT,
+        volume FLOAT,
+        number_of_trades INT
+    );
+    """
+    cursor.execute(create_query)
 
-if __name__ == "__main__":
-    crypto_data = load_crypto_data()
+    # Insert or update records
+    for _, row in df.iterrows():
+        insert_query = f"""
+        INSERT INTO {table_name} (date, open, high, low, close, volume, number_of_trades)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
+        ON DUPLICATE KEY UPDATE
+            open = VALUES(open),
+            high = VALUES(high),
+            low = VALUES(low),
+            close = VALUES(close),
+            volume = VALUES(volume),
+            number_of_trades = VALUES(number_of_trades)
+        """
+        cursor.execute(insert_query, (
+            row['Date'], row['Open'], row['High'], row['Low'],
+            row['Close'], row['Volume'], row['Number of Trades']
+        ))
+
+    connection.commit()
+    cursor.close()
+    if close_connection:
+        connection.close()
+        print(f"✅ Saved data and closed connection for: {table_name}")
+    else:
+        print(f"✅ Saved data to MySQL table: {table_name}")
