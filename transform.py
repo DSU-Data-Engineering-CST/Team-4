@@ -1,43 +1,33 @@
 # transform.py
-# Loads the Excel data and performs basic data cleanup or transformation
 
 import pandas as pd
-import os
 
-# Load from Desktop
-desktop = os.path.join(os.path.expanduser("~"), "Desktop")
-excel_file = os.path.join(desktop, "top_10_crypto_data.xlsx")
+# --------------------------------------
+# Transform Crypto DataFrame
+# --------------------------------------
+def transform_data(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Apply transformation or feature engineering on the raw crypto DataFrame.
 
-def load_data():
-    print("📂 Loading Excel file...")
-    try:
-        xl = pd.ExcelFile(excel_file)
-        coin_data = {sheet_name: xl.parse(sheet_name) for sheet_name in xl.sheet_names}
-        print(f"✅ Loaded data for coins: {', '.join(coin_data.keys())}")
-        return coin_data
-    except FileNotFoundError:
-        print("❌ Excel file not found! Please run `extract.py` first.")
-        return {}
+    Example transformations:
+    - Add daily returns
+    - Add moving averages
+    - Rename columns if needed
+    """
 
-def clean_data(data):
-    for coin, df in data.items():
-        # Ensure correct dtypes and handle missing values
-        df["Date"] = pd.to_datetime(df["Date"], errors='coerce')
-        df = df.dropna(subset=["Date"])
-        df = df.sort_values("Date")
+    if df.empty:
+        return df
 
-        # Forward fill missing values if any
-        df.fillna(method='ffill', inplace=True)
-        data[coin] = df
-    print("🧹 Cleaned and sorted all data.")
-    return data
+    df = df.sort_values("Date")
 
-def transform_main():
-    raw_data = load_data()
-    if raw_data:
-        clean = clean_data(raw_data)
-        return clean
-    return {}
+    # Add daily percentage return
+    df['Daily Return (%)'] = df['Close'].pct_change() * 100
 
-if __name__ == "__main__":
-    transformed_data = transform_main()
+    # Add 7-day and 30-day moving averages
+    df['MA_7'] = df['Close'].rolling(window=7).mean()
+    df['MA_30'] = df['Close'].rolling(window=30).mean()
+
+    # Fill NA for moving averages with forward-fill/backward-fill
+    df.fillna(method='bfill', inplace=True)
+
+    return df
