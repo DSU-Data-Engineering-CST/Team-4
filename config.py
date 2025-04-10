@@ -1,26 +1,23 @@
 # config.py
 
-# --------------------------------------
-# MySQL Configuration
-# --------------------------------------
+import os
+from dotenv import load_dotenv
+
+# Load .env variables
+load_dotenv()
+
 DB_CONFIG = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': 'rootsrushti8',
-    'database': 'crypto_data',
-    'charset': 'utf8mb4'
+    'host': os.getenv('DB_HOST'),
+    'user': os.getenv('DB_USER'),
+    'password': os.getenv('DB_PASSWORD'),
+    'database': os.getenv('DB_NAME'),
+    'charset': os.getenv('DB_CHARSET')
 }
 
-# --------------------------------------
-# Crypto Symbols to Track
-# --------------------------------------
 SYMBOLS = [
     'BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'XRPUSDT', 'ADAUSDT',
     'SOLUSDT', 'DOGEUSDT', 'AVAXUSDT', 'DOTUSDT', 'MATICUSDT'
 ]
 
-# --------------------------------------
-# Binance API Configuration
-# --------------------------------------
 INTERVAL = '1d'
 START_DATE = '2017-08-01'
