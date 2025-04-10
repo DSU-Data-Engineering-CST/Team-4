@@ -26,30 +26,13 @@ A Python-based ETL (Extract, Transform, Load) pipeline that collects historical 
 
 ---
 
-## 📁 Project Structure
-
-```
-├── config.py
-├── extract.py
-├── transform.py
-├── load.py
-├── main.py
-├── requirements.txt
-├── run_etl.sh
-├── .env
-├── .gitignore
-└── README.md
-```
-
----
-
 ## ⚙️ Setup Instructions
 
 ### 1. Clone the Repo
 
 ```bash
-git clone https://github.com/yourusername/crypto-etl.git
-cd crypto-etl
+https://github.com/DSU-Data-Engineering-CST/Team-4.git
+cd Team-4
 ```
 
 ### 2. Install Dependencies
@@ -95,12 +78,4 @@ DB_CHARSET=utf8mb4
 
 ---
 
-## 🧑‍💻 Author
 
-Built by **[Your Name]** – feel free to reach out or fork the project!
-
----
-
-## 📄 License
-
-This project is open-source and available under the [MIT License](LICENSE).
