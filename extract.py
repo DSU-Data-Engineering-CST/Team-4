@@ -4,26 +4,15 @@ import requests
 import time
 import pandas as pd
 from datetime import datetime
+from config import INTERVAL, START_DATE
 
-# --------------------------------------
-# Global Configuration
-# --------------------------------------
-interval = '1d'
-start_str = '2017-08-01'
-
-# --------------------------------------
-# Helper Functions
-# --------------------------------------
 def date_to_ms(date_str):
     return int(datetime.strptime(date_str, "%Y-%m-%d").timestamp() * 1000)
 
 def ms_to_date(ms):
     return datetime.utcfromtimestamp(ms / 1000.0)
 
-# --------------------------------------
-# Fetch Data from Binance API
-# --------------------------------------
-def fetch_coin_data(symbol, interval=interval, start_str=start_str):
+def fetch_coin_data(symbol, interval=INTERVAL, start_str=START_DATE):
     url = 'https://api.binance.com/api/v3/klines'
     start_ms = date_to_ms(start_str)
     end_ms = int(time.time() * 1000)
@@ -56,6 +45,6 @@ def fetch_coin_data(symbol, interval=interval, start_str=start_str):
             })
 
         start_ms = data[-1][6] + 1
-        time.sleep(0.4)  # To avoid hitting the API rate limit
+        time.sleep(0.4)
 
     return pd.DataFrame(all_data)
