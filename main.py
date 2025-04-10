@@ -1,6 +1,7 @@
 from extract import fetch_coin_data
 from load import save_to_mysql
 from config import DB_CONFIG, SYMBOLS
+from transform import transform_data
 import pymysql
 
 def main():
