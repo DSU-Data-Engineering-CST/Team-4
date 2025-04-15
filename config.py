@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
-# Database Configuration
 DB_CONFIG = {
     'host': os.getenv('DB_HOST', 'localhost'),
     'user': os.getenv('DB_USER', 'root'),
@@ -14,5 +13,5 @@ DB_CONFIG = {
 }
 
 # ETL Configuration
-INTERVAL = os.getenv('INTERVAL', '1d')          # default: daily data
-START_DATE = os.getenv('START_DATE', '2023-01-01')  # default: Jan 1, 2023
+INTERVAL = os.getenv('INTERVAL', '1d')  # Default: daily
+START_DATE = os.getenv('START_DATE', '2023-01-01')  # Default: Jan 1, 2023
